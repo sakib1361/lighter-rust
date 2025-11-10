@@ -4,7 +4,7 @@ members = [
     "crypto", 
     "signer",
     "api-client",
-    "signer-wasm"
+    "signer-ext"
 ]
 resolver = "2"
 
