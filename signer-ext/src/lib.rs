@@ -149,25 +149,24 @@ pub extern "C" fn SignModifyOrder(
     api_key_index: c_int,
     account_index: c_longlong,
     market_index: c_int,
-    client_order_index: c_longlong,
+    index: c_longlong,
     new_base_amount: c_longlong,
     new_price: c_int,
-    reduce_only: c_int,
-    new_order_expiry: c_longlong,
+    trigger_price: c_int,
     nonce: c_longlong,
 ) -> StrOrErr {
     let pk = unsafe { CStr::from_ptr(private_key) }.to_string_lossy().to_string();
-
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis() as i64;
+    let expired_at = now + 599_000; // 10 minutes - 1 second (in milliseconds)
     let tx_info = json!({
         "AccountIndex": account_index,
         "ApiKeyIndex": api_key_index,
         "MarketIndex": market_index,
-        "ClientOrderIndex": client_order_index,
+        "Index": index,
         "BaseAmount": new_base_amount,
         "Price": new_price,
-        "ReduceOnly": reduce_only,
-        "OrderExpiry": new_order_expiry,
-        "ExpiredAt": new_order_expiry,
+        "TriggerPrice": trigger_price,
+        "ExpiredAt": expired_at,
         "Nonce": nonce,
         "Sig": ""
     });

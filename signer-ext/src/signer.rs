@@ -212,6 +212,35 @@ impl KeyManager {
                     to_goldi_i64(order_expiry),
                 ]
             }
+            17 => {
+                let market_index = tx_value["MarketIndex"].as_u64().unwrap_or(0) as u32;
+                let index = tx_value["Index"].as_i64().unwrap_or(0);
+                let base_amount = tx_value["BaseAmount"].as_i64().unwrap_or(0);
+                let price = tx_value["Price"]
+                    .as_u64()
+                    .or_else(|| tx_value["Price"].as_i64().map(|v| v as u64))
+                    .unwrap_or(0) as u32;
+                let trigger_price = tx_value["TriggerPrice"]
+                    .as_u64()
+                    .or_else(|| tx_value["TriggerPrice"].as_i64().map(|v| v as u64))
+                    .unwrap_or(0) as u32;
+                
+                vec![
+                    Goldilocks::from_canonical_u64(lighter_chain_id as u64),
+                    Goldilocks::from_canonical_u64(tx_type as u64),
+                    to_goldi_i64(nonce),
+                    to_goldi_i64(expired_at),
+
+                    to_goldi_i64(account_index),
+                    Goldilocks::from_canonical_u64(api_key_index as u64),
+                    Goldilocks::from_canonical_u64(market_index as u64),
+                    to_goldi_i64(index),
+                   
+                    to_goldi_i64(base_amount),
+                    Goldilocks::from_canonical_u64(price as u64),
+                    Goldilocks::from_canonical_u64(trigger_price as u64),
+                ]
+            }
             15 => {
                 // CANCEL_ORDER: 8 elements
                 let market_index = tx_value["MarketIndex"].as_u64().unwrap_or(0) as u32;
