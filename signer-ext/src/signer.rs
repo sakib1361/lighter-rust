@@ -54,11 +54,6 @@ impl KeyManager {
         public_fp5.to_bytes_le()
     }
 
-    /// Get the private key as bytes (40 bytes)
-    pub fn private_key_bytes(&self) -> [u8; 40] {
-        self.private_key.to_bytes_le()
-    }
-
     pub fn sign(&self, message: &[u8; 40]) -> Result<[u8; 80]> {
         // Generate cryptographically secure random nonce
         let nonce_scalar = ScalarField::sample_crypto();
@@ -128,7 +123,7 @@ impl KeyManager {
 
         if verify_sign {
            
-            let pubkey = self.private_key_bytes();
+            let pubkey = self.public_key_bytes();
             let sig_ok = verify_signature(&signature,  &message_bytes, &pubkey).unwrap();
 
             if !sig_ok {

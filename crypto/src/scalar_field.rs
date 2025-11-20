@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, str::FromStr};
 use num_bigint::BigUint;
 
 /// Scalar field element for the ECgFp5 curve.
@@ -390,10 +390,8 @@ impl ScalarField {
         use rand::Rng;
 
         // Correct 40-byte ORDER, big-endian
-        let order_bytes = hex::decode("7ffffffd800000077ffffff1000000167fffffe6cfb80639e8885c39d724a09ce80fd996948bffe1")
-                                .expect("invalid ORDER hex");
-
-        let order_big = BigUint::from_bytes_be(&order_bytes);
+        let order_str = "1067993516717146951041484916571792702745057740581727230159139685185762082554198619328292418486241";
+        let order_big = BigUint::from_str(&order_str).unwrap();
 
         let mut rng = rand::thread_rng();
         let mut random_bytes = [0u8; 40];
